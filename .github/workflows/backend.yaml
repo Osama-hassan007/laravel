@@ -1,0 +1,46 @@
+name: Backend Deployment
+
+on:
+  push:
+    branches:
+      - 12.x  # This triggers the workflow on any push to the 12.x branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Runs the workflow on the latest Ubuntu image
+
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Step 2: Setup SSH for EC2 access
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Use the private key from GitHub secrets
+
+      # Step 3: Install PHP and Composer (if needed)
+      - name: Install PHP and Composer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y php-cli php-mbstring php-xml php-zip php-mysql unzip curl
+          curl -sS https://getcomposer.org/installer | php
+          sudo mv composer.phar /usr/local/bin/composer
+
+      # Step 4: Deploy the backend app and run migrations
+      - name: Deploy and run migrations on Backend
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/saw.pem ubuntu@34.204.107.147 << 'EOF'
+            # Navigate to the Laravel project directory
+            cd /var/www/laravel || exit  # Update this path based on where the Laravel app is located
+
+            # Pull the latest changes from the 12.x branch
+            git pull origin 12.x
+
+            # Install PHP dependencies
+            composer install
+
+            # Run the database migrations
+            php artisan migrate --force  # The --force flag ensures migrations run in production
+          EOF
