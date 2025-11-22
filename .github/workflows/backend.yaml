@@ -31,7 +31,7 @@ jobs:
       # Step 4: Deploy the backend app and run migrations
       - name: Deploy and run migrations on Backend
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/saw.pem ubuntu@34.204.107.147 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/kkk.pem ubuntu@54.237.227.57 << 'EOF'
             # Navigate to the Laravel project directory
             cd /var/www/laravel || exit  # Update this path based on where the Laravel app is located
 
