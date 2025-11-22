@@ -20,18 +20,10 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Use the private key from GitHub secrets
 
-      # Step 3: Install PHP and Composer (if needed)
-      - name: Install PHP and Composer
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y php-cli php-mbstring php-xml php-zip php-mysql unzip curl
-          curl -sS https://getcomposer.org/installer | php
-          sudo mv composer.phar /usr/local/bin/composer
-
-      # Step 4: Deploy the backend app and run migrations
+      # Step 3: Deploy the backend app and run migrations
       - name: Deploy and run migrations on Backend
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/kkk.pem ubuntu@3.90.113.231 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/kkk.pem ubuntu@54.196.207.17 << 'EOF'
             # Navigate to the Laravel project directory
             if [ ! -d "/var/www/laravel/.git" ]; then
               # Clone the Laravel repository if not already cloned
