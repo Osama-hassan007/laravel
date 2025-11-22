@@ -33,7 +33,13 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/kkk.pem ubuntu@54.237.227.57 << 'EOF'
             # Navigate to the Laravel project directory
-            cd /var/www/laravel || exit  # Update this path based on where the Laravel app is located
+            if [ ! -d "/var/www/laravel/.git" ]; then
+              # Clone the Laravel repository if not already cloned
+              cd /var/www || exit
+              git clone https://github.com/laravel/laravel.git /var/www/laravel
+            fi
+
+            cd /var/www/laravel || exit
 
             # Pull the latest changes from the 12.x branch
             git pull origin 12.x
